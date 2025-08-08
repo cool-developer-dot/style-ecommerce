@@ -1,0 +1,254 @@
+@import "tailwindcss";
+
+:root {
+  --background: #fff7ed;
+  --foreground: #171717;
+  --primary: #3b82f6;
+  --primary-foreground: #ffffff;
+  --secondary: #fed7aa;
+  --secondary-foreground: #0f172a;
+  --accent: #f59e0b;
+  --accent-foreground: #ffffff;
+  --muted: #ffedd5;
+  --muted-foreground: #64748b;
+  --border: #fed7aa;
+  --input: #fff7ed;
+  --ring: #3b82f6;
+  --radius: 0.5rem;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #1c1917;
+    --foreground: #39FF14;
+    --primary: #3b82f6;
+    --primary-foreground: #39FF14;
+    --secondary: #292524;
+    --secondary-foreground: #39FF14;
+    --accent: #f59e0b;
+    --accent-foreground: #39FF14;
+    --muted: #292524;
+    --muted-foreground: #39FF14;
+    --border: #44403c;
+    --input: #1c1917;
+    --ring: #3b82f6;
+  }
+}
+
+/* Force background on all elements */
+* {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+html {
+  background-color: var(--background) !important;
+  color: var(--foreground) !important;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+body {
+  background-color: var(--background) !important;
+  color: var(--foreground) !important;
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--muted);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--muted-foreground);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--foreground);
+}
+
+/* Dark mode specific overrides */
+html.dark {
+  color-scheme: dark;
+  background-color: #1c1917 !important;
+  color: #39FF14 !important;
+}
+
+.dark {
+  color-scheme: dark;
+}
+
+.dark html {
+  background-color: #1c1917 !important;
+  color: #39FF14 !important;
+}
+
+.dark body {
+  background-color: #1c1917 !important;
+  color: #39FF14 !important;
+}
+
+/* Force neon green text in dark mode for all elements */
+.dark * {
+  color: #39FF14 !important;
+}
+
+/* Exceptions for specific elements that should keep their colors */
+.dark .text-blue-600,
+.dark .text-indigo-600,
+.dark .text-purple-600,
+.dark .text-green-500,
+.dark .text-red-500,
+.dark .text-orange-500,
+.dark .text-yellow-400,
+.dark .text-blue-400,
+.dark .text-indigo-400,
+.dark .text-purple-400,
+.dark .text-green-400,
+.dark .text-red-400,
+.dark .text-orange-400,
+.dark .text-yellow-300,
+.dark .bg-gradient-to-r,
+.dark .bg-gradient-to-br,
+.dark .bg-gradient-to-l,
+.dark .bg-gradient-to-t,
+.dark .bg-gradient-to-tr,
+.dark .bg-gradient-to-tl,
+.dark .bg-gradient-to-bl,
+.dark .bg-gradient-to-br {
+  color: inherit !important;
+}
+
+/* Theme toggle button enhancements */
+.theme-toggle {
+  transition: all 0.3s ease;
+}
+
+.theme-toggle:hover {
+  transform: scale(1.1);
+}
+
+/* Force background color changes */
+html {
+  background-color: var(--background) !important;
+}
+
+body {
+  background-color: var(--background) !important;
+}
+
+/* Dark mode specific overrides */
+.dark body {
+  background-color: #1c1917 !important;
+}
+
+.dark html {
+  background-color: #1c1917 !important;
+}
+
+/* Additional force overrides */
+#__next {
+  background-color: var(--background) !important;
+  min-height: 100vh;
+}
+
+.dark #__next {
+  background-color: #1c1917 !important;
+}
+
+/* Force all main containers */
+main {
+  background-color: var(--background) !important;
+}
+
+.dark main {
+  background-color: #1c1917 !important;
+}
+
+/* Force all div containers */
+div {
+  background-color: inherit;
+}
+
+.dark div {
+  background-color: inherit;
+}
+
+/* Force dark background for sections except home page */
+.dark section:not([data-home-page="true"]) {
+  background-color: #1c1917 !important;
+}
+
+.dark .bg-gray-50:not([data-home-page="true"]) {
+  background-color: #1c1917 !important;
+}
+
+/* 3D Flip Effect Classes */
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.preserve-3d {
+  transform-style: preserve-3d;
+}
+
+.backface-hidden {
+  backface-visibility: hidden;
+}
+
+/* Desktop Button Fixes */
+button {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+/* Ensure buttons work on desktop */
+@media (min-width: 768px) {
+  button {
+    pointer-events: auto !important;
+    cursor: pointer !important;
+  }
+  
+  .cursor-pointer {
+    cursor: pointer !important;
+    pointer-events: auto !important;
+  }
+}
+
+/* Fix for motion buttons on desktop */
+@media (min-width: 768px) {
+  [data-framer-motion] {
+    pointer-events: auto !important;
+  }
+}
