@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { CartProvider } from "@/components/CartContext";
+import { WishlistProvider } from "@/components/WishlistContext";
 import { SearchProvider } from "@/components/SearchContext";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import ConditionalFooter from "@/components/ConditionalFooter";
@@ -22,10 +23,12 @@ export default function RootLayout({
         <ThemeProvider>
           <SearchProvider>
             <CartProvider>
-                                  {children}
-                    <ConditionalFooter />
-                    <CookieConsentWrapper />
-                  </CartProvider>
+              <WishlistProvider>
+                {children}
+                <ConditionalFooter />
+                <CookieConsentWrapper />
+              </WishlistProvider>
+            </CartProvider>
           </SearchProvider>
         </ThemeProvider>
       </body>

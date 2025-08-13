@@ -39,18 +39,21 @@ interface CartContextType {
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 const cartReducer = (state: CartState, action: CartAction): CartState => {
+  // Ensure state.items is always initialized
+  const currentItems = state.items || [];
+  
   switch (action.type) {
     case 'ADD_ITEM': {
       console.log('Processing ADD_ITEM, current state:', state);
-      const existingItem = state.items.find(item => item.id === action.payload.id);
+      const existingItem = currentItems.find(item => item.id === action.payload.id);
       
-      if (existingItem) {
-        console.log('Item already exists, increasing quantity');
-        const updatedItems = state.items.map(item =>
-          item.id === action.payload.id
-            ? { ...item, quantity: item.quantity + 1 }
-            : item
-        );
+              if (existingItem) {
+          console.log('Item already exists, increasing quantity');
+          const updatedItems = currentItems.map(item =>
+            item.id === action.payload.id
+              ? { ...item, quantity: item.quantity + 1 }
+              : item
+          );
         
         const total = updatedItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
         const itemCount = updatedItems.reduce((sum, item) => sum + item.quantity, 0);
@@ -61,7 +64,7 @@ const cartReducer = (state: CartState, action: CartAction): CartState => {
       } else {
         console.log('Adding new item to cart');
         const newItem = { ...action.payload, quantity: 1 };
-        const updatedItems = [...state.items, newItem];
+        const updatedItems = [...currentItems, newItem];
         const total = updatedItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
         const itemCount = updatedItems.reduce((sum, item) => sum + item.quantity, 0);
         
@@ -72,7 +75,7 @@ const cartReducer = (state: CartState, action: CartAction): CartState => {
     }
     
     case 'REMOVE_ITEM': {
-      const updatedItems = state.items.filter(item => item.id !== action.payload);
+      const updatedItems = currentItems.filter(item => item.id !== action.payload);
       const total = updatedItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
       const itemCount = updatedItems.reduce((sum, item) => sum + item.quantity, 0);
       
@@ -80,7 +83,7 @@ const cartReducer = (state: CartState, action: CartAction): CartState => {
     }
     
     case 'UPDATE_QUANTITY': {
-      const updatedItems = state.items.map(item =>
+      const updatedItems = currentItems.map(item =>
         item.id === action.payload.id
           ? { ...item, quantity: Math.max(0, action.payload.quantity) }
           : item
@@ -155,11 +158,12 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const isInCart = (id: number) => {
-    if (!isMounted) return false;
+    if (!isMounted || !state.items) return false;
     return state.items.some(item => item.id === id);
   };
 
   const getItemQuantity = (id: number) => {
+    if (!state.items) return 0;
     const item = state.items.find(item => item.id === id);
     return item ? item.quantity : 0;
   };

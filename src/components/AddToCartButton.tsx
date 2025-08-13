@@ -28,8 +28,13 @@ const AddToCartButton = ({ product, variant = 'button', className = '' }: AddToC
 
   useEffect(() => {
     setIsMounted(true);
-    setIsInCartState(isInCart(product.id));
-  }, [isInCart, product.id]);
+  }, []);
+
+  useEffect(() => {
+    if (isMounted && isInCart) {
+      setIsInCartState(isInCart(product.id));
+    }
+  }, [isMounted, product.id, isInCart]);
 
   const handleAddToCart = () => {
     addToCart({

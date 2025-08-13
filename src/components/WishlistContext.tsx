@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useReducer, useEffect } from 'react';
+import React, { createContext, useContext, useReducer, useEffect, useState } from 'react';
 
 interface WishlistItem {
   id: number;
@@ -34,15 +34,18 @@ interface WishlistContextType {
 const WishlistContext = createContext<WishlistContextType | undefined>(undefined);
 
 const wishlistReducer = (state: WishlistState, action: WishlistAction): WishlistState => {
+  // Ensure state.items is always initialized
+  const currentItems = state.items || [];
+  
   switch (action.type) {
     case 'ADD_ITEM': {
-      const existingItem = state.items.find(item => item.id === action.payload.id);
+      const existingItem = currentItems.find(item => item.id === action.payload.id);
       
       if (existingItem) {
         // Item already exists, don't add again
         return state;
       } else {
-        const updatedItems = [...state.items, action.payload];
+        const updatedItems = [...currentItems, action.payload];
         const itemCount = updatedItems.length;
         
         return { ...state, items: updatedItems, itemCount };
@@ -50,7 +53,7 @@ const wishlistReducer = (state: WishlistState, action: WishlistAction): Wishlist
     }
     
     case 'REMOVE_ITEM': {
-      const updatedItems = state.items.filter(item => item.id !== action.payload);
+      const updatedItems = currentItems.filter(item => item.id !== action.payload);
       const itemCount = updatedItems.length;
       
       return { ...state, items: updatedItems, itemCount };
@@ -72,9 +75,17 @@ export const WishlistProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     items: [],
     itemCount: 0
   });
+  const [isMounted, setIsMounted] = useState(false);
 
-  // Load wishlist from localStorage on mount
+  // Set mounted state
   useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  // Load wishlist from localStorage on mount (only on client)
+  useEffect(() => {
+    if (!isMounted) return;
+    
     const savedWishlist = localStorage.getItem('wishlist');
     if (savedWishlist) {
       try {
@@ -84,12 +95,13 @@ export const WishlistProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         console.error('Error loading wishlist from localStorage:', error);
       }
     }
-  }, []);
+  }, [isMounted]);
 
-  // Save wishlist to localStorage whenever it changes
+  // Save wishlist to localStorage whenever it changes (only on client)
   useEffect(() => {
+    if (!isMounted) return;
     localStorage.setItem('wishlist', JSON.stringify(state));
-  }, [state]);
+  }, [state, isMounted]);
 
   const addToWishlist = (item: WishlistItem) => {
     dispatch({ type: 'ADD_ITEM', payload: item });
@@ -104,6 +116,7 @@ export const WishlistProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   };
 
   const isInWishlist = (id: number) => {
+    if (!isMounted || !state.items) return false;
     return state.items.some(item => item.id === id);
   };
 
