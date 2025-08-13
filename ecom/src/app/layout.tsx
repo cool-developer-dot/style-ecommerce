@@ -1,0 +1,41 @@
+import type { Metadata } from "next";
+import { CartProvider } from "@/components/CartContext";
+import { WishlistProvider } from "@/components/WishlistContext";
+import { SearchProvider } from "@/components/SearchContext";
+import { ThemeProvider } from "@/components/ThemeProvider";
+import Header from "@/components/Header";
+import ConditionalFooter from "@/components/ConditionalFooter";
+import CookieConsentWrapper from "@/components/CookieConsentWrapper";
+import "./globals.css";
+
+export const metadata: Metadata = {
+  title: "StyleHub - Modern Fashion eCommerce",
+  description: "Discover the latest trends in fashion with StyleHub. Shop men's, women's, and kids' clothing with premium quality and style.",
+};
+
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return (
+    <html lang="en" className="scroll-smooth">
+      <body className="bg-orange-50 dark:bg-stone-900 transition-all duration-300">
+        <ThemeProvider>
+          <SearchProvider>
+            <CartProvider>
+              <WishlistProvider>
+                <Header />
+                <main className="pt-16">
+                  {children}
+                </main>
+                <ConditionalFooter />
+                <CookieConsentWrapper />
+              </WishlistProvider>
+            </CartProvider>
+          </SearchProvider>
+        </ThemeProvider>
+      </body>
+    </html>
+  );
+}
